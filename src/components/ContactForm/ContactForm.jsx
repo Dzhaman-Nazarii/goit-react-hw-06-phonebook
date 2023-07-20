@@ -1,29 +1,45 @@
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addContact } from 'redux/contactsSlice';
 
 export default function ContactForm() {
-
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
 
   const handleSubmit = evt => {
     evt.preventDefault();
     const form = evt.target;
-    dispatch(addContact({
-      nameValue: form.elements.name.value,
-      numberValue: form.elements.number.value,
-      idValue: nanoid()
-    }));
+
+    const includeContact = contacts.find(contact => contact.nameValue.toLowerCase() === form.elements.name.value.toLowerCase());
+
+    if (!includeContact) {
+      const nameValue = form.elements.name.value;
+      const numberValue = form.elements.number.value;
+
+      if (nameValue.trim() === '' || numberValue.trim() === '') {
+        alert(`Please enter the contact's name and number.`)
+        return;
+      }
+
+      const idValue = nanoid();
+
+      dispatch(addContact({
+        nameValue,
+        numberValue,
+        idValue
+      }));
+    } else {
+      alert(`A contact with the name ${form.elements.name.value} already exists`);
+    }
     form.reset();
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit} className={css.formContainer}>
-        <label>Name</label>
-        {/* htmlFor */}
+        <label htmlFor="name">Name</label>
         <input
           className={css.formInput}
           type="text"
@@ -32,8 +48,7 @@ export default function ContactForm() {
           title="Name may contain only letters, spaces, hyphens, and apostrophes are allowed"
           required
         />
-        <label>Number</label>
-        {/* htmlFor */}
+        <label htmlFor="number">Number</label>
         <input
           className={css.formInput}
           type="tel"

@@ -1,67 +1,43 @@
-import { useState, useCallback } from 'react';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
 
-export default function ContactForm({ onSubmit }) {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+import { useDispatch } from "react-redux";
+import { addContact } from 'redux/contactsSlice';
 
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
+export default function ContactForm() {
 
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
-  };
+  const dispatch = useDispatch();
 
-  const handleSubmit = useCallback(
-    (evt) => {
-      evt.preventDefault();
-      onSubmit({ name, number });
-      reset();
-    },
-    [name, number, onSubmit]
-  );
-
-  const nameId = nanoid();
-  const numberId = nanoid();
-
-  const reset = () => {
-    setName('');
-    setNumber('');
+  const handleSubmit = evt => {
+    evt.preventDefault();
+    const form = evt.target;
+    dispatch(addContact({
+      nameValue: form.elements.name.value,
+      numberValue: form.elements.number.value,
+      idValue: nanoid()
+    }));
+    form.reset();
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit} className={css.formContainer}>
-        <label htmlFor={nameId}>Name</label>
+        <label>Name</label>
+        {/* htmlFor */}
         <input
           className={css.formInput}
-          id={nameId}
           type="text"
           name="name"
-          value={name}
-          onChange={handleChange}
           pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, spaces, hyphens, and apostrophes are allowed"
           required
         />
-        <label htmlFor={numberId}>Number</label>
+        <label>Number</label>
+        {/* htmlFor */}
         <input
           className={css.formInput}
-          id={numberId}
           type="tel"
           name="number"
-          value={number}
-          onChange={handleChange}
           pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
           title="Valid Phone Number: Optional '+' Symbol, Digits, Spaces, Hyphens, and Parentheses"
           required
@@ -73,7 +49,3 @@ export default function ContactForm({ onSubmit }) {
     </div>
   );
 }
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};

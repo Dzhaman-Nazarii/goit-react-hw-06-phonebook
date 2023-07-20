@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import ContactForm from 'components/ContactForm/ContactForm'
 import ContactList from 'components/ContactList/ContactList';
 import Filter from 'components/Filter/Filter';
@@ -7,22 +7,6 @@ import Filter from 'components/Filter/Filter';
 export default function App() {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
-
-  const addContact = (data) => {
-    const existingContact = contacts.find(
-      (contact) => contact.name.toLowerCase() === data.name.toLowerCase()
-    );
-    if (existingContact) {
-      alert('A contact with this name already exists!');
-    } else {
-      const newContact = {
-        id: nanoid(),
-        name: data.name,
-        number: data.number,
-      };
-      setContacts([...contacts, newContact]);
-    }
-  };
 
   const deleteContact = (id) => {
     const updatedContacts = contacts.filter((contact) => contact.id !== id);
@@ -55,7 +39,7 @@ export default function App() {
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={addContact} />
+      <ContactForm/>
       <h2>Contacts</h2>
       <Filter onChange={onChange} />
       <ContactList contacts={getContactsBySearch()} onDelete={deleteContact} />

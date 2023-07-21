@@ -6,11 +6,11 @@ import { deleteContact } from '../../redux/contactsSlice'
 export default function ContactList() {
   const dispatch = useDispatch()
 
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts); // Переконайтеся, що ви користуєтеся ключем "contacts"
   const filtration = useSelector(state => state.filter);
 
   const handleDelete = (idValue) => { dispatch(deleteContact(idValue)) };
-  
+
   const filterContact = contacts.filter(contact =>
     contact.nameValue.toLowerCase().includes(filtration.toLowerCase())
   );

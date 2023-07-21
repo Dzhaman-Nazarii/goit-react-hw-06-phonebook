@@ -1,11 +1,11 @@
 import { useDispatch} from 'react-redux';
-import { searchFilter } from '../../redux/filterSlice';
+import { filter } from '../../redux/filterSlice';
 
 export default function Filter() {
 
   const dispatch = useDispatch();
   const handleFilter = evt => {
-    dispatch(searchFilter(evt.currentTarget.value));
+    dispatch(filter(evt.currentTarget.value));
   };
   
   return (
